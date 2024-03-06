@@ -31,10 +31,10 @@ short_circuit_CM=[]
 short_circuit_RCM=[]
 for seq in short_circuit:
     #feature_seq_M=slopen.Multiscale(seq, 8, slopen.Slopen, m=3, gamma=1, delta=0.001)
-    feature_seq_M=slopen.Multiscale(seq, 8, slopen.Aten)###
-    feature_seq_TSM=slopen.Time_shift_multiscale(seq, 8, slopen.Aten)
-    feature_seq_CM=slopen.Composite_multiscale(seq, 8, slopen.Aten)
-    feature_seq_RCM = slopen.Refined_composite_multiscale(seq, 8, slopen.Aten)
+    feature_seq_M=slopen.Multiscale(seq, 8, slopen.Shen)###
+    feature_seq_TSM=slopen.Time_shift_multiscale(seq, 8, slopen.Shen)
+    feature_seq_CM=slopen.Composite_multiscale(seq, 8, slopen.Shen)
+    feature_seq_RCM = slopen.Refined_composite_multiscale(seq, 8, slopen.Shen)
     short_circuit_M.append(feature_seq_M)
     short_circuit_TSM.append(feature_seq_TSM)
     short_circuit_CM.append(feature_seq_CM)
@@ -43,8 +43,8 @@ for seq in short_circuit:
 short_circuit_M_arr=np.unique(np.array(short_circuit_M),axis=0)
 short_circuit_TSM_arr=np.unique(np.array(short_circuit_TSM),axis=0)
 short_circuit_CM_arr=np.unique(np.array(short_circuit_CM),axis=0)
-short_circuit_RCM_arr=np.unique(np.array(short_circuit_RCM),axis=0)
+#short_circuit_RCM_arr=np.unique(np.array(short_circuit_RCM),axis=0)
 np.savetxt('./feature/short_circuit_M.txt',short_circuit_M_arr,fmt='%.5f',delimiter='\t')
 np.savetxt('./feature/short_circuit_TSM.txt',short_circuit_TSM_arr,fmt='%.5f',delimiter='\t')
 np.savetxt('./feature/short_circuit_CM.txt',short_circuit_CM_arr,fmt='%.5f',delimiter='\t')
-np.savetxt('./feature/short_circuit_RCM.txt',short_circuit_RCM_arr,fmt='%.5f',delimiter='\t')
+#np.savetxt('./feature/short_circuit_RCM.txt',short_circuit_RCM_arr,fmt='%.5f',delimiter='\t')

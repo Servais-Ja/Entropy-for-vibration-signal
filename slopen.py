@@ -1,9 +1,8 @@
-import numpy
 import numpy as np
 import math
 from scipy.signal import argrelextrema
 #斜率熵计算函数，输入序列seq，及参数m、gamma、delta即可得该序列对应的熵，文献中m=3，gamma=1，delta=0.001
-def Slopen(seq, m, gamma, delta, detail=False):#seq是列表或np数组都可以
+def Slopen(seq, m=3, gamma=1, delta=0.001, detail=False):#seq是列表或np数组都可以
     N=len(seq)
     arr=np.array(seq)
     allpattern=[]
@@ -34,6 +33,30 @@ def Slopen(seq, m, gamma, delta, detail=False):#seq是列表或np数组都可以
             patterndic[str(k[0])]=k[1]
         return patterndic
     return slopen
+
+#香农熵计算函数，n=20
+#归一化方法上包括minmax，sigmoid，tan，只实现了minmax
+#功率谱熵Power spectral entropy
+def Shen(seq, n=20, detail=False):
+    seq=np.array(seq)
+    min_limit = min(seq)
+    max_limit = max(seq)
+    k=(max_limit-min_limit)/n
+    seq[(seq >= min_limit) & (seq <= min_limit+k)] = 0
+    for i in range(1,n):
+        seq[(seq>min_limit+i*k)&(seq<=min_limit+(i+1)*k)] = i
+    patterndic={}
+    for i in seq:
+        if i in patterndic.keys():
+            patterndic[i]=patterndic[i]+1
+        else:
+            patterndic[i]=1
+    length=len(seq)
+    pseq = [patterndic[i]/length*math.log(patterndic[i]/length, 2) for i in patterndic.keys()]
+    if detail:
+        return patterndic
+    return -sum(pseq)
+
 
 #注意熵计算函数
 #计算交替的极大值和极小值
@@ -87,9 +110,7 @@ def Aten(seq, threshold=0.0001, detail=False):
     if detail:
         return patterndic
     return aten/4
-
-
-
+"""
 #写的不太行
 def Aten_(seq, m, gamma, delta, detail=False):#seq是列表或np数组都可以
     seq = np.array(seq)
@@ -116,6 +137,7 @@ def Aten_(seq, m, gamma, delta, detail=False):#seq是列表或np数组都可以
         else:
             allpattern_min_min[pattern] = 1
     return 1
+"""
 
 #多种粗粒化方法
 def average_coarse(seq):
