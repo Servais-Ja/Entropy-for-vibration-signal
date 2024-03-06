@@ -5,6 +5,7 @@ This is a programme designed to calculate the entropy for vibration signal ident
 Slope Entropy  
 Attention Entropy  
 Shannon Entropy
+Dispersion Entropy
 ## Methods for Improving
 Multiscale entropy  
 Time shift multiscale entropy  

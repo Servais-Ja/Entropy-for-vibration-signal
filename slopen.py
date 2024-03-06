@@ -1,5 +1,6 @@
 import numpy as np
 import math
+from scipy.stats import norm
 from scipy.signal import argrelextrema
 #斜率熵计算函数，输入序列seq，及参数m、gamma、delta即可得该序列对应的熵，文献中m=3，gamma=1，delta=0.001
 def Slopen(seq, m=3, gamma=1, delta=0.001, detail=False):#seq是列表或np数组都可以
@@ -33,6 +34,25 @@ def Slopen(seq, m=3, gamma=1, delta=0.001, detail=False):#seq是列表或np数�
             patterndic[str(k[0])]=k[1]
         return patterndic
     return slopen
+
+#散布熵计算函数
+def Disen(seq, m=3, c=6, d=1, detail=False):
+    N=len(seq)
+    seq=np.array(seq)
+    seq=norm.pdf(seq, np.mean(seq), np.std(seq))
+    seq=np.rint(c*seq+0.5)
+    patterndic={}
+    for i in range(N-(m-1)*d):
+        pattern=str(seq[i:i+(m-1)*d+1:d])
+        if pattern in patterndic.keys():
+            patterndic[pattern]=patterndic[pattern]+1
+        else:
+            patterndic[pattern]=1
+    length=sum(patterndic.values())
+    pseq = [patterndic[i] / length * math.log(patterndic[i] / length, 2) for i in patterndic.keys()]
+    if detail:
+        return patterndic
+    return -sum(pseq)
 
 #香农熵计算函数，n=20
 #归一化方法上包括minmax，sigmoid，tan，只实现了minmax

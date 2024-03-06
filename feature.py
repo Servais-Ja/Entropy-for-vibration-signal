@@ -2,7 +2,6 @@
 import numpy as np
 import slopen
 import scipy.io as sio
-
 n=2000
 #文件读取(列表或np.array均可)
 #多个文件一块儿读取，记得变量名要变
@@ -31,10 +30,10 @@ short_circuit_CM=[]
 short_circuit_RCM=[]
 for seq in short_circuit:
     #feature_seq_M=slopen.Multiscale(seq, 8, slopen.Slopen, m=3, gamma=1, delta=0.001)
-    feature_seq_M=slopen.Multiscale(seq, 8, slopen.Shen)###
-    feature_seq_TSM=slopen.Time_shift_multiscale(seq, 8, slopen.Shen)
-    feature_seq_CM=slopen.Composite_multiscale(seq, 8, slopen.Shen)
-    feature_seq_RCM = slopen.Refined_composite_multiscale(seq, 8, slopen.Shen)
+    feature_seq_M=slopen.Multiscale(seq, 8, slopen.Disen)###
+    feature_seq_TSM=slopen.Time_shift_multiscale(seq, 8, slopen.Disen)
+    feature_seq_CM=slopen.Composite_multiscale(seq, 8, slopen.Disen)
+    feature_seq_RCM = slopen.Refined_composite_multiscale(seq, 8, slopen.Disen)
     short_circuit_M.append(feature_seq_M)
     short_circuit_TSM.append(feature_seq_TSM)
     short_circuit_CM.append(feature_seq_CM)
