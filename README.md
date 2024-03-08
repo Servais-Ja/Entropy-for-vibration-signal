@@ -2,6 +2,7 @@
 This is a programme designed to calculate the entropy for vibration signal identification.
 
 ## Entropy available
+improved Slope entropy  
 Slope Entropy  
 Attention Entropy  
 Shannon Entropy  
