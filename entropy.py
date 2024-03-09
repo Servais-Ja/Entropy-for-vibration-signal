@@ -11,6 +11,7 @@ from scipy.signal import argrelextrema
 # 斜率熵计算函数，输入序列seq，及参数m、gamma、delta即可得该序列对应的熵，文献中m=3，gamma=1，delta=0.001
 # m为嵌入维数，gamma和delta分别为划分数据的高低两个间断点
 # detail用于精细复合多尺度熵的计算，为True时不输出熵值，而是输出模式及其出现频次的字典
+# 感觉实际上也可以称作基于波动的香农熵（功率谱熵）？
 def Slopen(seq, m=3, gamma=1, delta=0.001, detail=False):#seq是列表或np数组都可以
     N=len(seq)
     arr=np.array(seq)
@@ -35,6 +36,7 @@ def Slopen(seq, m=3, gamma=1, delta=0.001, detail=False):#seq是列表或np数�
             allpattern.append([pattern,1])
     for k in allpattern:
         p=k[1]/len(allpattern)
+        #p = k[1] / (N-m+1)
         slopen=slopen-p*math.log(p,2)
     if detail:
         patterndic={}
@@ -43,11 +45,12 @@ def Slopen(seq, m=3, gamma=1, delta=0.001, detail=False):#seq是列表或np数�
         return patterndic
     return slopen
 
+# ！！！计算复杂度太高，计算时间太长
 # 散布熵计算函数，输入序列seq，及参数m、c、d即可得该序列对应的熵
 # m为嵌入维数，c为类别个数，d为时延
 def fun_pdf(x):
     return norm.pdf(x, a, b)
-def Disen(seq, m=3, c=6, d=1, detail=False):
+def Disen(seq, m=3, c=3, d=1, detail=False):
     N=len(seq)
     seq=np.array(seq)
     avg=np.mean(seq)
@@ -67,11 +70,11 @@ def Disen(seq, m=3, c=6, d=1, detail=False):
         return patterndic
     return -sum(pseq)
 
-# 香农熵计算函数，输入序列seq，及参数n即可得该序列对应的熵
+# 香农熵计算函数，输入序列seq，及参数n即可得该序列对应的熵，本函数默认参数根据在本数据集上的经验得到
 # n为类别个数
 # 香农熵的可采取的归一化方法上包括minmax，sigmoid，tan，本程序只实现了minmax
 # 功率谱熵Power spectral entropy
-def Shen(seq, n=20, detail=False):
+def Shen(seq, n=10, detail=False):
     seq=np.array(seq)
     min_limit = min(seq)
     max_limit = max(seq)
@@ -91,7 +94,7 @@ def Shen(seq, n=20, detail=False):
         return patterndic
     return -sum(pseq)
 
-# 注意熵计算函数，输入序列seq，及参数threshold即可得该序列对应的熵
+# 注意熵计算函数，输入序列seq，及参数threshold即可得该序列对应的熵，本函数默认参数根据在本数据集上的经验得到
 # 相临极大值极小值差需大于threshold才能被视为有效的极大值极小值
 # 函数get_extremes用于计算交替的极大值和极小值
 def get_extremes(seq, threshold):
@@ -174,14 +177,114 @@ def Aten_(seq, m, gamma, delta, detail=False):#seq是列表或np数组都可以
     return 1
 """
 
+# ！！！计算复杂度太高，计算时间太长
+# 近似熵计算函数，输入序列seq，及参数m、r即可得该序列对应的熵，文献中m=2， r=0.2*序列标准差（0.1~0.25）
+# m为嵌入维数，r为相似容限与序列标准差的比值
+def distance(seq1, seq2):
+    return max(abs(np.array(seq1)-np.array(seq2)))
+
+def Apen(seq, m=3, r=0.2):
+    r = r*np.std(np.array(seq))
+    N = len(seq)
+    value1=0
+    value2=0
+    for k in range(2):
+        seq_list = []
+        m = m+k
+        for i in range(N-m+1):
+            seq_list.append(seq[i:i+m])
+        lst = []
+        for i in seq_list:
+            distance_list=[]
+            for j in seq_list:
+                distance_list.append(distance(i, j))
+            lst.append(np.sum(np.array(distance_list) < r) / (N - m + 1))
+        if k == 0:
+            value1 = sum([math.log(i) for i in lst])/N-m+1
+        else:
+            value2 = sum([math.log(i) for i in lst])/N-m+1
+    return value1-value2
+
+# 样本熵计算函数，输入序列seq，及参数m、r即可得该序列对应的熵，文献中m=2， r=0.2*序列标准差（0.1~0.25）
+# m为嵌入维数，r为相似容限与序列标准差的比值
+def Smpen(seq, m=3, r=0.2):
+    r = r*np.std(np.array(seq))
+    N = len(seq)
+    value1=0
+    value2=0
+    for k in range(2):
+        seq_list = []
+        m = m+k
+        for i in range(N-m+1):
+            seq_list.append(seq[i:i+m])
+        lst = []
+        for i in seq_list:
+            distance_list=[]
+            for j in seq_list:
+                distance_list.append(distance(i, j))
+            lst.append((np.sum(np.array(distance_list) < r) - 1) / (N - m))
+        if k == 0:
+            value1 = sum(lst) / N - m + 1
+        else:
+            value2 = sum(lst) / N - m + 1
+    return -math.log(value2/value1)
+
+# 样本熵计算函数，输入序列seq，及参数m、r即可得该序列对应的熵，文献中m=2， r=0.2*序列标准差（0.1~0.25）
+# m为嵌入维数，r为相似容限与序列标准差的比值
+def Fuzen(seq, m=3, r=0.2, n=2):
+    r = r*np.std(np.array(seq))
+    N = len(seq)
+    value1=0
+    value2=0
+    for k in range(2):
+        seq_list = []
+        m = m+k
+        for i in range(N-m+1):
+            seq_list_arr=np.array(seq[i:i+m])-sum(seq[i:i+m])/m
+            seq_list.append(seq_list_arr.tolist())
+        lst = []
+        for i in seq_list:
+            distance_list=[]
+            for j in seq_list:
+                distance_list.append(distance(i, j))
+            lst.append((sum([math.exp(-(i**n/r)) for i in distance_list])-1) / (N - m))
+        if k == 0:
+            value1 = sum(lst) / N - m + 1
+        else:
+            value2 = sum(lst) / N - m + 1
+    return -math.log(value2/value1)
+
+# 排列熵计算函数，输入序列seq，及参数m、d即可得该序列对应的熵
+# m为嵌入维数，d为时延
+def Pren(seq, m=3, d=1, detail=False):
+    patterndic={}
+    N=len(seq)
+    for i in range(N-(m-1)*d):
+        sub_seq = seq[i:i+(m-1)*d+1:d]
+        pattern = str(np.argsort(np.array(sub_seq)))
+        if pattern in patterndic.keys():
+            patterndic[pattern] = patterndic[pattern]+1
+        else:
+            patterndic[pattern] = 1
+    length=sum(patterndic.values())
+    if detail:
+        return patterndic
+    return sum([-patterndic[i]/length*math.log(patterndic[i]/length) for i in patterndic.keys()])
+
+# 冒泡熵（Bubble Entropy）###0
+# 分布熵（Distribution Entropy）###4
+# 余弦相似熵（改进的近似熵）
+# 相位熵 #
+# 模糊散布熵 ###3
+
 
 ########################################################################################################################
 # 改进的斜率熵计算函数
 ########################################################################################################################
-def improved_Slopen(seq, entropy=Shen, detail=False, **kwargs):#seq是列表或np数组都可以
+def improved_Slopen(seq, en=Shen, detail=False, **kwargs):#seq是列表或np数组都可以
     arr = np.array(seq)[1:] - np.array(seq)[:-1]
-    seq_difference = [i for i in arr]
-    return entropy(seq_difference, **kwargs, detail=detail)
+    seq_difference = arr.tolist()
+    return en(seq_difference, **kwargs, detail=detail)
 
 
 ########################################################################################################################

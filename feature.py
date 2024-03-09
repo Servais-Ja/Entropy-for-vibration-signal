@@ -28,17 +28,17 @@ for i in range(6):
 short_circuit_M=[]
 short_circuit_TSM=[]
 short_circuit_CM=[]
-short_circuit_RCM=[]
+#short_circuit_RCM=[]
 for seq in short_circuit:
     #feature_seq_M=entropy.Multiscale(seq, 8, entropy.Slopen, m=3, gamma=1, delta=0.001)
-    feature_seq_M=entropy.Multiscale(seq, 8, entropy.improved_Slopen)###
-    feature_seq_TSM=entropy.Time_shift_multiscale(seq, 8, entropy.improved_Slopen)
-    feature_seq_CM=entropy.Composite_multiscale(seq, 8, entropy.improved_Slopen)
-    feature_seq_RCM = entropy.Refined_composite_multiscale(seq, 8, entropy.improved_Slopen)
+    feature_seq_M=entropy.Multiscale(seq, 8, entropy.improved_Slopen, en=entropy.Aten)###
+    feature_seq_TSM=entropy.Time_shift_multiscale(seq, 8, entropy.improved_Slopen, en=entropy.Aten)
+    feature_seq_CM=entropy.Composite_multiscale(seq, 8, entropy.improved_Slopen, en=entropy.Aten)
+    #feature_seq_RCM = entropy.Refined_composite_multiscale(seq, 8, entropy.Apen)
     short_circuit_M.append(feature_seq_M)
     short_circuit_TSM.append(feature_seq_TSM)
     short_circuit_CM.append(feature_seq_CM)
-    short_circuit_RCM.append(feature_seq_RCM)
+    #short_circuit_RCM.append(feature_seq_RCM)
 #将提取的特征存入文件
 
 short_circuit_M_arr=np.array(short_circuit_M)
