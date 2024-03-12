@@ -45,8 +45,17 @@ This is a programme designed to calculate the entropy for vibration signal ident
 ---
 * Approximate Entropy  
 * Sample Entropy  
-* Fuzzy Entropy  
-* Permutation Entropy
+* Fuzzy Entropy
+---
+* ***Permutation Entropy:***
+  * Permutation Entropy is calculated by capturing the order relations between values of a time series and extracting a probability distribution of the ordinal patterns. After partitioning the one-dimensional time series, the subsequences are mapped into unique permutations that capture the ordinal rankings of the data. In the end, probability of permutations (ordinal patterns) is calculated to obtain the entropy value.
+  * **Pren(seq, m=3, d=1, detail=False)**
+  * **Parameters:**
+     * **seq:       list**      Time series.
+     * **m:         int**       Length of subsequence (Embedding dimension).
+     * **d:         int**       Time delay.
+     * **detail:    bool**      Return the dictionary of frequency corresponding to each patterns.
+  * **Return:**   float
 ## Methods for Improving
 * Multiscale entropy  
 * Time shift multiscale entropy  
