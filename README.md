@@ -43,10 +43,6 @@ This is a programme designed to calculate the entropy for vibration signal ident
       * **detail:    bool**      Return the dictionary of frequency corresponding to each patterns.
    * **Return:**   float
 ---
-* Approximate Entropy  
-* Sample Entropy  
-* Fuzzy Entropy
----
 * ***Permutation Entropy:***
   * Permutation Entropy is calculated by capturing the order relations between values of a time series and extracting a probability distribution of the ordinal patterns. After partitioning the one-dimensional time series, the subsequences are mapped into unique permutations that capture the ordinal rankings of the data. In the end, probability of permutations (ordinal patterns) is calculated to obtain the entropy value.
   * **Pren(seq, m=3, d=1, detail=False)**
@@ -56,6 +52,17 @@ This is a programme designed to calculate the entropy for vibration signal ident
      * **d:         int**       Time delay.
      * **detail:    bool**      Return the dictionary of frequency corresponding to each patterns.
   * **Return:**   float
+---
+* ***Approximate Entropy & Sample Entropy & Fuzzy Entropy***
+  * The principle of these three kinds of entropy is similar, and all measure the probability that a time series will produce a new pattern when its embedding dimension changes. Different from Approximate Entropy, Sample Entropy doesn't contain comparison to its own data segment. Instead of utilizing unit step function as Approximate Entropy and Sample Entropy, Fuzzy Entropy improved the method to evaluate the similarity between different subsequences. All the three entropies use Chebychev distance to calculate the distancu of two subsequences.
+  * It should be noted that all the three entropies don't have parameter 
+  * **Apen(seq, m=3, r=0.2)**
+  * **Smpen(seq, m=3, r=0.2)**
+  * **Fuzen(seq, m=3, r=0.2, n=2)**
+     * **seq:       list**      Time series.
+     * **m:         int**       Length of subsequence (Embedding dimension).
+     * **r:         float**     Ratio of similarity tolerance to sequence standard deviation.
+     * **n:         int**       Gradient of similarity tolerance boundary.
 ## Methods for Improving
 * Multiscale entropy  
 * Time shift multiscale entropy  
