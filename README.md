@@ -55,16 +55,48 @@ This is a programme designed to calculate the entropy for vibration signal ident
 ---
 * ***Approximate Entropy & Sample Entropy & Fuzzy Entropy***
   * The principle of these three kinds of entropy is similar, and all measure the probability that a time series will produce a new pattern when its embedding dimension changes. Different from Approximate Entropy, Sample Entropy doesn't contain comparison to its own data segment. Instead of utilizing unit step function as Approximate Entropy and Sample Entropy, Fuzzy Entropy improved the method to evaluate the similarity between different subsequences. All the three entropies use Chebychev distance to calculate the distancu of two subsequences.
-  * It should be noted that all the three entropies don't have parameter 
+  * It should be noted that all the three entropies don't have parameter **detail**, so they doesn't have corresponding Refined Composite Multiscale method.
   * **Apen(seq, m=3, r=0.2)**
   * **Smpen(seq, m=3, r=0.2)**
   * **Fuzen(seq, m=3, r=0.2, n=2)**
+  * **Parameters:**
      * **seq:       list**      Time series.
      * **m:         int**       Length of subsequence (Embedding dimension).
      * **r:         float**     Ratio of similarity tolerance to sequence standard deviation.
      * **n:         int**       Gradient of similarity tolerance boundary.
 ## Methods for Improving
-* Multiscale entropy  
-* Time shift multiscale entropy  
-* Composite multiscale entropy  
-* Refined composite multiscale entropy  
+* ***Coarse graining method***
+  * This function is used in the fuctions of Multiscale entropy, Composite multiscale entropy and Refined composite multiscale entropy for coarse graining.
+  * **ms(seq,k,func=average_coarse)**
+  * **Parameters:**
+     * **seq:       list**      Time series.
+     * **k:         int**       Length of subsequences for coarse graining.
+     * **func:      function**  Method used for coarse graining. Includong average_coarse, max_coarse, min_coarse, root_mean_square_coarse and variance_coarse.
+* ***Multiscale entropy***
+  * **Multiscale(seq,tao,entropy,\*\*kwargs)**
+  * **Parameters:**
+     * **seq:        list**      Time series.
+     * **tao:        int**       Length of partitioned subsequences while employing multiscale method.
+     * **entropy:    function**  Method for calculating entropy (in **Entropy available**).
+     * **\*\*kwargs: key-value** Parameters of utilized entropy function that need to be revised.
+* ***Time shift multiscale entropy***
+  * **Time_shift_multiscale(seq,tao,entropy,\*\*kwargs)**
+  * **Parameters:**
+     * **seq:        list**      Time series.
+     * **tao:        int**       Length of partitioned subsequences while employing multiscale method.
+     * **entropy:    function**  Method for calculating entropy (in **Entropy available**).
+     * **\*\*kwargs: key-value** Parameters of utilized entropy function that need to be revised.
+* ***Composite multiscale entropy***
+  * **Composite_multiscale(seq,tao,entropy,\*\*kwargs)**
+  * **Parameters:**
+     * **seq:        list**      Time series.
+     * **tao:        int**       Length of partitioned subsequences while employing multiscale method.
+     * **entropy:    function**  Method for calculating entropy (in **Entropy available**).
+     * **\*\*kwargs: key-value** Parameters of utilized entropy function that need to be revised.
+* ***Refined composite multiscale entropy***
+  * **Refined_composite_multiscale(seq,tao,entropy,\*\*kwargs)**
+  * **Parameters:**
+     * **seq:        list**      Time series.
+     * **tao:        int**       Length of partitioned subsequences while employing multiscale method.
+     * **entropy:    function**  Method for calculating entropy (in **Entropy available**).
+     * **\*\*kwargs: key-value** Parameters of utilized entropy function that need to be revised.
