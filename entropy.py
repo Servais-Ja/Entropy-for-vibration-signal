@@ -229,7 +229,7 @@ def Smpen(seq, m=3, r=0.2):
             value2 = sum(lst) / N - m + 1
     return -math.log(value2/value1)
 
-# 样本熵计算函数，输入序列seq，及参数m、r即可得该序列对应的熵，文献中m=2， r=0.2*序列标准差（0.1~0.25）
+# 模糊熵计算函数，输入序列seq，及参数m、r、n即可得该序列对应的熵，文献中m=2， r=0.2*序列标准差（0.1~0.25），n=2
 # m为嵌入维数，r为相似容限与序列标准差的比值
 def Fuzen(seq, m=3, r=0.2, n=2):
     r = r*np.std(np.array(seq))
