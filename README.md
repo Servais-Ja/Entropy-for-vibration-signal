@@ -16,10 +16,11 @@ This is a programme designed to calculate the entropy for vibration signal ident
 ---
 * ***Attention Entropy:***
    * Attention Entropy is calculated in three main steps: (1) define the key patterns (define peak points as the key patterns, including local maxima and local minima); (2) calculate the intervals between two adjacent key patterns (intervals of local maxima to local maxima, local minima to local minima, local maxima to local minima, local minima to local maxima; (3) calculate Shannon entropy of intervals.
-   * **Aten(seq, threshold=0.0001, detail=False)**
+   * **Aten(seq, threshold=0.0001, window=False, detail=False)**
    * **Parameters:**
       * **seq:       list**      Time series.
-      * **threshold: float**     The difference between two consective local maximum and local minimum must be larger that the value of threshold.
+      * **threshold: float**     The difference between two consective local maximum and local minimum must be larger that the value of $threshold*std(seq)$.
+      * **window:   bool**       Use sliding wondow to calculate the value of local threshold $threshold*std(seq[i-10:i+10])$. It should be noted that this will seriously reduce calculating speed.
       * **detail:    bool**      Return the dictionary of frequency corresponding to each patterns.
    * **Return:**   float
 ---
