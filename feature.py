@@ -14,17 +14,16 @@ for folder in folder_list:
 
 class_list=[]
 for i in range(len(dicmat)):
-    dicmat[i].keys()
     var_list = [j for j in dicmat[i].keys() if 'Data1_AI_' in j]
     arr1 = []
     for k in var_list:
         arr1.append(np.array(dicmat[i][k]).flatten())
-    #数据划分
-    split_arr1=[]
-    for i in range(len(arr1)):
-        k=len(arr1[i])//n
+    # 数据划分
+    split_arr1 = []
+    for l in range(len(arr1)):
+        k = len(arr1[l])//n
         for j in range(k):
-            split_arr1.append(arr1[i][j*n:(j+1)*n].tolist())
+            split_arr1.append(arr1[l][j*n:(j+1)*n].tolist())
     class_list.append(split_arr1)
 
 cnt=0
@@ -37,9 +36,9 @@ for seq_list in class_list:
     #short_circuit_RCM=[]
     for seq in seq_list:
         #feature_seq_M=entropy.Multiscale(seq, 8, entropy.Slopen, m=3, gamma=1, delta=0.001)
-        feature_seq_M=entropy.Multiscale(seq, 8, entropy.Shen)###
-        feature_seq_TSM=entropy.Time_shift_multiscale(seq, 8, entropy.Shen)
-        feature_seq_CM=entropy.Composite_multiscale(seq, 8, entropy.Shen)
+        feature_seq_M=entropy.Multiscale(seq, 8, entropy.Aten)###
+        feature_seq_TSM=entropy.Time_shift_multiscale(seq, 8, entropy.Aten)
+        feature_seq_CM=entropy.Composite_multiscale(seq, 8, entropy.Aten)
         #feature_seq_RCM = entropy.Refined_composite_multiscale(seq, 8, entropy.Apen)
         M.append(feature_seq_M)
         TSM.append(feature_seq_TSM)

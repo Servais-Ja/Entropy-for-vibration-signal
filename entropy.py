@@ -97,26 +97,35 @@ def Shen(seq, n=10, detail=False):
 # 注意熵计算函数，输入序列seq，及参数threshold即可得该序列对应的熵，本函数默认参数根据在本数据集上的经验得到
 # 相临极大值极小值差需大于threshold才能被视为有效的极大值极小值
 # 函数get_extremes用于计算交替的极大值和极小值
-def get_extremes(seq, threshold):
+def get_extremes(seq, threshold, window):
     output_sequence = []
     output_index = []
     is_max = seq[0] < seq[1]
     initial = is_max
-    for i in range(1, len(seq) - 1):
-        if (is_max and seq[i] > seq[i - 1] and seq[i] > seq[i + 1]) or (not is_max and seq[i] < seq[i - 1] and seq[i] < seq[i + 1]):
-            if len(output_sequence) == 0 or abs(seq[i] - output_sequence[-1]) > threshold:
-                output_sequence.append(seq[i])
-                output_index.append(i)
-                is_max = not is_max
+    threshold_value=threshold*np.std(np.array(seq))
+    if window:
+        for i in range(1, len(seq) - 1):
+            if (is_max and seq[i] > seq[i - 1] and seq[i] > seq[i + 1]) or (not is_max and seq[i] < seq[i - 1] and seq[i] < seq[i + 1]):
+                if len(output_sequence) == 0 or abs(seq[i] - output_sequence[-1]) > threshold*np.std(np.array(seq[i-10:i+10])):
+                    output_sequence.append(seq[i])
+                    output_index.append(i)
+                    is_max = not is_max
+    else:
+        for i in range(1, len(seq) - 1):
+            if (is_max and seq[i] > seq[i - 1] and seq[i] > seq[i + 1]) or (not is_max and seq[i] < seq[i - 1] and seq[i] < seq[i + 1]):
+                if len(output_sequence) == 0 or abs(seq[i] - output_sequence[-1]) > threshold_value:
+                    output_sequence.append(seq[i])
+                    output_index.append(i)
+                    is_max = not is_max
     return output_index, initial
 
-def Aten(seq, threshold=0.0001, detail=False):
-    index, initial = get_extremes(seq, threshold)
+def Aten(seq, threshold=0.1, window=False, detail=False):
+    index, initial = get_extremes(seq, threshold, window)
     is_max=initial
     max_index = []
     min_index = []
-    seq=np.array(seq)
-    for i in seq[index]:
+    #seq=np.array(seq) seq(index)
+    for i in index:
         if is_max:
             max_index.append(i)
         else:
